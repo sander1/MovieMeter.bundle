@@ -15,7 +15,7 @@ class MovieMeterAgent(Agent.Movies):
 
   def __init__(self):
     Agent.Movies.__init__(self)
-    self.proxy = XMLRPC.Proxy(MM_ENDPOINT_URI)
+    self.proxy = XMLRPC.Proxy(MM_ENDPOINT_URI, 'iso-8859-1')
     self.valid_till = 0
 
   def search(self, results, media, lang):
@@ -26,7 +26,7 @@ class MovieMeterAgent(Agent.Movies):
   def update(self, metadata, media, lang):
     response = self.proxy.film.retrieveDetails(self.get_session_key(), int(metadata.id))
     if response != None:
-      metadata.summary = response['plot']
+      metadata.summary = unicode(response['plot']).replace(u'\u0092', u'\u2019')
 
   def get_session_key(self):
     if self.valid_till < int(time()):
