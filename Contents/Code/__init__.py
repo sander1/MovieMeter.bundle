@@ -27,6 +27,7 @@ class MovieMeterAgent(Agent.Movies):
     response = self.proxy.film.retrieveDetails(self.get_session_key(), int(metadata.id))
     if response != None:
       metadata.summary = unicode(response['plot']).replace(u'\u0092', u'\u2019')
+      metadata.rating = float(response['average'])*2 # Max 5 for MovieMeter, needs max 10 for Plex
 
   def get_session_key(self):
     if self.valid_till < int(time()):
