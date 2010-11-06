@@ -19,13 +19,15 @@ class MovieMeterAgent(Agent.Movies):
     self.valid_till = 0
 
   def search(self, results, media, lang):
-    mm_id = self.proxy.film.retrieveByImdb(self.get_session_key(), media.primary_metadata.id)
+    mm_id = self.proxy.film.retrieveByImdb(self.get_session_key(), media.primary_metadata.id) # media.primary_metadata.id = IMDb-id
     if mm_id != None:
-      results.Append(MetadataSearchResult(id = mm_id, score = 100))
+      results.Append(MetadataSearchResult(id=mm_id, score=100))
 
   def update(self, metadata, media, lang):
     response = self.proxy.film.retrieveDetails(self.get_session_key(), int(metadata.id))
     if response != None:
+      metadata.title = unicode(response['title']).replace(u'\u0092', u'\u2019')
+      metadata.year = int(response['year'])
       metadata.summary = unicode(response['plot']).replace(u'\u0092', u'\u2019')
       metadata.rating = float(response['average'])*2 # Max 5 for MovieMeter, needs max 10 for Plex
 

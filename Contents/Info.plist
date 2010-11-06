@@ -20,5 +20,10 @@
 	<string>2</string>
 	<key>PlexPluginMode</key>
 	<string>AlwaysOn</string>
+	<key>PlexAgentAttributionText</key>
+	<string>
+		Dutch movie summaries by &lt;a href=&quot;http://www.moviemeter.nl/&quot;&gt;MovieMeter&lt;/a&gt;&lt;br/&gt;
+		Free for non-commercial use.
+	</string>
 </dict>
 </plist>
