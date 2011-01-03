@@ -25,14 +25,15 @@ class MovieMeterAgent(Agent.Movies):
       results.Append(MetadataSearchResult(id=mm_id, score=100))
 
   def update(self, metadata, media, lang):
-    response = self.proxy.film.retrieveDetails(self.get_session_key(), int(metadata.id))
-    if response != None:
-      metadata.year = int(response['year'])
-      metadata.rating = float(response['average'])*2 # Max 5 for MovieMeter, needs max 10 for Plex
+    if lang == 'nl':
+      response = self.proxy.film.retrieveDetails(self.get_session_key(), int(metadata.id))
+      if response != None:
+        metadata.year = int(response['year'])
+        metadata.rating = float(response['average'])*2 # Max 5 for MovieMeter, needs max 10 for Plex
 
-      movie_page = HTML.ElementFromURL(MM_MOVIE_PAGE % int(metadata.id))
-      metadata.title = movie_page.xpath('//div[@id="centrecontent"]/h1')[0].text.rsplit('(',1)[0].strip()
-      metadata.summary = movie_page.xpath('//div[@id="film_info"]/text()[last()]')[0].strip()
+        movie_page = HTML.ElementFromURL(MM_MOVIE_PAGE % int(metadata.id))
+        metadata.title = movie_page.xpath('//div[@id="centrecontent"]/h1')[0].text.rsplit('(',1)[0].strip()
+        metadata.summary = movie_page.xpath('//div[@id="film_info"]/text()[last()]')[0].strip()
 
   def get_session_key(self):
     if self.valid_till < int(time()):
