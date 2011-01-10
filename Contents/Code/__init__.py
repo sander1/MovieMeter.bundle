@@ -30,31 +30,36 @@ class MovieMeterAgent(Agent.Movies):
       if response != None:
         metadata.year = int(response['year'])
 
-        if Prefs['rating'] == 'Gebruik MovieMeter':
+        if Prefs['rating']:
           metadata.rating = float(response['average'])*2 # Max 5 for MovieMeter, needs max 10 for Plex
+        else:
+          metadata.rating = None
 
-        if Prefs['genres'] == 'Gebruik MovieMeter':
-          metadata.genres.clear()
+        metadata.genres.clear()
+        if Prefs['genres']:
           for genre in response['genres']:
             metadata.genres.add(genre)
 
         # Get title and summary from the website, not from the API
         movie_page = HTML.ElementFromURL(MM_MOVIE_PAGE % int(metadata.id))
 
-        if Prefs['title'] == 'Gebruik MovieMeter':
+        if Prefs['title']:
           metadata.title = movie_page.xpath('//div[@id="centrecontent"]/h1')[0].text.rsplit('(',1)[0].strip()
+        else:
+          metadata.title = ''
 
-        if Prefs['summary'] == 'Gebruik MovieMeter':
+        if Prefs['summary']:
           metadata.summary = movie_page.xpath('//div[@id="film_info"]/text()[last()]')[0].strip()
+        else:
+          metadata.summary = ''
 
-        if Prefs['poster'] == 'Gebruik MovieMeter':
-          try:
-            poster = response['thumbnail'].replace('/thumbs', '')
-            if poster not in metadata.posters:
-              img = HTTP.Request(poster)
-              metadata.posters[poster] = Proxy.Preview(img, sort_order=1)
-          except:
-            pass
+        poster = response['thumbnail'].replace('/thumbs', '')
+        if Prefs['poster']:
+          if poster not in metadata.posters:
+            img = HTTP.Request(poster)
+            metadata.posters[poster] = Proxy.Preview(img)
+        else:
+          del metadata.posters[poster]
 
   def get_session_key(self):
     if self.valid_till < int(time()):
