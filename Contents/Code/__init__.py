@@ -33,6 +33,11 @@ class MovieMeterAgent(Agent.Movies):
         if Prefs['rating']:
           metadata.rating = float(response['average'])*2 # Max 5 for MovieMeter, needs max 10 for Plex
 
+        if Prefs['genres']:
+          metadata.genres.clear()
+          for genre in response['genres']:
+            metadata.genres.add(genre)
+
         # Get title and summary from the website, not the API
         movie_page = HTML.ElementFromURL(MM_MOVIE_PAGE % int(metadata.id))
 
@@ -41,6 +46,15 @@ class MovieMeterAgent(Agent.Movies):
 
         if Prefs['summary']:
           metadata.summary = movie_page.xpath('//div[@id="film_info"]/text()[last()]')[0].strip()
+
+        if Prefs['poster']:
+          try:
+            poster = response['thumbnail'].replace('/thumbs', '')
+            if poster not in metadata.posters:
+              img = HTTP.Request(poster)
+              metadata.posters[poster] = Proxy.Preview(img, sort_order=1)
+          except:
+            pass
 
   def get_session_key(self):
     if self.valid_till < int(time()):

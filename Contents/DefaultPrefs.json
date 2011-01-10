@@ -6,15 +6,27 @@
     "default":"true"
   },
   {
+    "id":"summary",
+    "label":"Haal synopsis op van MovieMeter",
+    "type":"bool",
+    "default":"true"
+  },
+  {
+    "id":"genres",
+    "label":"Haal genres op van MovieMeter",
+    "type":"bool",
+    "default":"true"
+  },
+  {
     "id":"rating",
     "label":"Haal rating op van MovieMeter",
     "type":"bool",
     "default":"true"
   },
   {
-    "id":"summary",
-    "label":"Haal synopsis op van MovieMeter",
+    "id":"poster",
+    "label":"Haal poster op van MovieMeter",
     "type":"bool",
-    "default":"true"
+    "default":"false"
   }
 ]

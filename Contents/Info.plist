@@ -18,7 +18,7 @@
 	<string>1.0</string>
 	<key>PlexAgentAttributionText</key>
 	<string>
-				Dutch movie summaries by &lt;a href=&quot;http://www.moviemeter.nl/&quot;&gt;MovieMeter&lt;/a&gt;&lt;br/&gt;
+				Dutch movie titles, summaries and genres by &lt;a href=&quot;http://www.moviemeter.nl/&quot;&gt;MovieMeter&lt;/a&gt;&lt;br/&gt;
 				Free for non-commercial use.
 			</string>
 	<key>PlexFrameworkVersion</key>
