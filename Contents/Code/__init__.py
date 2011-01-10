@@ -30,24 +30,30 @@ class MovieMeterAgent(Agent.Movies):
       if response != None:
         metadata.year = int(response['year'])
 
-        if Prefs['rating']:
+        if Prefs['rating'] == 'Gebruik MovieMeter':
           metadata.rating = float(response['average'])*2 # Max 5 for MovieMeter, needs max 10 for Plex
+        elif Prefs['rating'] == 'Maak veld leeg':
+          metadata.rating = None
 
-        if Prefs['genres']:
+        if Prefs['genres'] == 'Gebruik MovieMeter':
           metadata.genres.clear()
           for genre in response['genres']:
             metadata.genres.add(genre)
+        elif Prefs['genres'] == 'Maak veld leeg':
+          metadata.genres.clear()
 
-        # Get title and summary from the website, not the API
+        # Get title and summary from the website, not from the API
         movie_page = HTML.ElementFromURL(MM_MOVIE_PAGE % int(metadata.id))
 
-        if Prefs['title']:
+        if Prefs['title'] == 'Gebruik MovieMeter':
           metadata.title = movie_page.xpath('//div[@id="centrecontent"]/h1')[0].text.rsplit('(',1)[0].strip()
 
-        if Prefs['summary']:
+        if Prefs['summary'] == 'Gebruik MovieMeter':
           metadata.summary = movie_page.xpath('//div[@id="film_info"]/text()[last()]')[0].strip()
+        elif Prefs['summary'] == 'Maak veld leeg':
+          metadata.summary = ''
 
-        if Prefs['poster']:
+        if Prefs['poster'] == 'Gebruik MovieMeter':
           try:
             poster = response['thumbnail'].replace('/thumbs', '')
             if poster not in metadata.posters:

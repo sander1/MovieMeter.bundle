@@ -1,32 +1,37 @@
 [
   {
     "id":"title",
-    "label":"Haal titel op van MovieMeter",
-    "type":"bool",
-    "default":"true"
+    "label":"Titel",
+    "type":"enum",
+    "values":["Gebruik MovieMeter", "Laat ongewijzigd"],
+    "default":"Gebruik MovieMeter"
   },
   {
     "id":"summary",
-    "label":"Haal synopsis op van MovieMeter",
-    "type":"bool",
-    "default":"true"
+    "label":"Synopsis",
+    "type":"enum",
+    "values":["Gebruik MovieMeter", "Maak veld leeg", "Laat ongewijzigd"],
+    "default":"Gebruik MovieMeter"
   },
   {
     "id":"genres",
-    "label":"Haal genres op van MovieMeter",
-    "type":"bool",
-    "default":"true"
+    "label":"Genres",
+    "type":"enum",
+    "values":["Gebruik MovieMeter", "Maak veld leeg", "Laat ongewijzigd"],
+    "default":"Gebruik MovieMeter"
   },
   {
     "id":"rating",
-    "label":"Haal rating op van MovieMeter",
-    "type":"bool",
-    "default":"true"
+    "label":"Rating",
+    "type":"enum",
+    "values":["Gebruik MovieMeter", "Maak veld leeg", "Laat ongewijzigd"],
+    "default":"Gebruik MovieMeter"
   },
   {
     "id":"poster",
-    "label":"Haal poster op van MovieMeter",
-    "type":"bool",
-    "default":"false"
+    "label":"Poster",
+    "type":"enum",
+    "values":["Gebruik MovieMeter", "Laat ongewijzigd"],
+    "default":"Laat ongewijzigd"
   }
 ]
