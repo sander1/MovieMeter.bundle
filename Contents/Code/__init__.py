@@ -32,15 +32,11 @@ class MovieMeterAgent(Agent.Movies):
 
         if Prefs['rating'] == 'Gebruik MovieMeter':
           metadata.rating = float(response['average'])*2 # Max 5 for MovieMeter, needs max 10 for Plex
-        elif Prefs['rating'] == 'Maak veld leeg':
-          metadata.rating = None
 
         if Prefs['genres'] == 'Gebruik MovieMeter':
           metadata.genres.clear()
           for genre in response['genres']:
             metadata.genres.add(genre)
-        elif Prefs['genres'] == 'Maak veld leeg':
-          metadata.genres.clear()
 
         # Get title and summary from the website, not from the API
         movie_page = HTML.ElementFromURL(MM_MOVIE_PAGE % int(metadata.id))
@@ -50,8 +46,6 @@ class MovieMeterAgent(Agent.Movies):
 
         if Prefs['summary'] == 'Gebruik MovieMeter':
           metadata.summary = movie_page.xpath('//div[@id="film_info"]/text()[last()]')[0].strip()
-        elif Prefs['summary'] == 'Maak veld leeg':
-          metadata.summary = ''
 
         if Prefs['poster'] == 'Gebruik MovieMeter':
           try:

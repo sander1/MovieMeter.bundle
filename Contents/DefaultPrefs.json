@@ -10,21 +10,21 @@
     "id":"summary",
     "label":"Synopsis",
     "type":"enum",
-    "values":["Gebruik MovieMeter", "Maak veld leeg", "Laat ongewijzigd"],
+    "values":["Gebruik MovieMeter", "Laat ongewijzigd"],
     "default":"Gebruik MovieMeter"
   },
   {
     "id":"genres",
     "label":"Genres",
     "type":"enum",
-    "values":["Gebruik MovieMeter", "Maak veld leeg", "Laat ongewijzigd"],
+    "values":["Gebruik MovieMeter", "Laat ongewijzigd"],
     "default":"Gebruik MovieMeter"
   },
   {
     "id":"rating",
     "label":"Rating",
     "type":"enum",
-    "values":["Gebruik MovieMeter", "Maak veld leeg", "Laat ongewijzigd"],
+    "values":["Gebruik MovieMeter", "Laat ongewijzigd"],
     "default":"Gebruik MovieMeter"
   },
   {
