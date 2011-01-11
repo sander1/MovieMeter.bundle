@@ -1,4 +1,5 @@
 # MovieMeter Metadata Agent
+import re
 from time import time
 
 MM_ENDPOINT_URI = 'http://www.moviemeter.nl/ws'
@@ -20,9 +21,30 @@ class MovieMeterAgent(Agent.Movies):
     self.valid_till = 0
 
   def search(self, results, media, lang):
-    mm_id = self.proxy.film.retrieveByImdb(self.get_session_key(), media.primary_metadata.id) # media.primary_metadata.id = IMDb-id
-    if mm_id != None:
+    # Zoek het MovieMeter film id op aan de hand van het door Freebase gevonden IMDb-id...
+    try:
+      mm_id = self.proxy.film.retrieveByImdb(self.get_session_key(), media.primary_metadata.id) # media.primary_metadata.id = IMDb-id
       results.Append(MetadataSearchResult(id=mm_id, score=100))
+    # ...als dat mislukt, probeer het MovieMeter film id te vinden aan de hand van de titel
+    except:
+      search = self.proxy.film.search(self.get_session_key(), media.primary_metadata.title)
+      for result in search:
+        mm_id = result['filmId']
+        score = int(result['similarity'].split('.')[0])
+
+        if result.has_key('year'):
+          score = score - abs(media.primary_metadata.year - int(result['year']))
+
+        if result.has_key('directors_text'):
+          directors_text = String.StripDiacritics(result['directors_text'])
+          for director in media.primary_metadata.directors:
+            director = String.StripDiacritics(director)
+            if re.search(director, directors_text, re.IGNORECASE) != None:
+              score = score + 10
+              break
+
+        results.Append(MetadataSearchResult(id=mm_id, score=score))
+        results.Sort('score', descending=True)
 
   def update(self, metadata, media, lang):
     if lang == 'nl':
