@@ -11,7 +11,7 @@ def Start():
 
 class MovieMeterAgent(Agent.Movies):
   name = 'MovieMeter'
-  languages = ['nl']
+  languages = [Locale.Language.Dutch]
   primary_provider = False
   contributes_to = ['com.plexapp.agents.imdb']
 
