@@ -71,7 +71,7 @@ class MovieMeterAgent(Agent.Movies):
           metadata.title = ''
 
         if Prefs['summary']:
-          metadata.summary = movie_page.xpath('//div[@id="film_info"]/text()[last()]')[0].strip()
+          metadata.summary = movie_page.xpath('//div[@id="film_info"]/span[@itemprop="description"]/text()')[0].strip()
         else:
           metadata.summary = ''
 
