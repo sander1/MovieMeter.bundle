@@ -66,15 +66,15 @@ class MovieMeterAgent(Agent.Movies):
         movie_page = HTML.ElementFromURL(MM_MOVIE_PAGE % int(metadata.id))
 
         if Prefs['title']:
-          try:
-            metadata.title = String.StripTags( movie_page.xpath('//div[@id="centrecontent"]/h1')[0].text.rsplit('(',1)[0].strip() )
-          except:
-            metadata.title = ''
+          metadata.title = movie_page.xpath('//div[@id="centrecontent"]/h1')[0].text.rsplit('(',1)[0].strip()
         else:
           metadata.title = ''
 
         if Prefs['summary']:
-          metadata.summary = movie_page.xpath('//div[@id="film_info"]/span[@itemprop="description"]/text()')[0].strip()
+          try:
+            metadata.summary = String.StripTags( movie_page.xpath('//div[@id="film_info"]/span[@itemprop="description"]')[0].text.strip() )
+          except:
+            metadata.summary = ''
         else:
           metadata.summary = ''
 
