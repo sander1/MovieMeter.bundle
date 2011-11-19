@@ -72,7 +72,7 @@ class MovieMeterAgent(Agent.Movies):
 
         if Prefs['summary']:
           try:
-            metadata.summary = String.StripTags( movie_page.xpath('//div[@id="film_info"]/span[@itemprop="description"]')[0].text.strip() )
+            metadata.summary = String.StripTags( movie_page.xpath('//div[@id="film_info"]/span[@itemprop="description"]/text()')[0].strip() )
           except:
             metadata.summary = ''
         else:
