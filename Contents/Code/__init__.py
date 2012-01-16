@@ -1,4 +1,3 @@
-# MovieMeter Metadata Agent
 import re
 from time import time
 
@@ -7,7 +6,8 @@ MM_API_KEY = 'fnsxd7shhmc8gefjhz2zv0nrjwjbezhj'
 MM_MOVIE_PAGE = 'http://www.moviemeter.nl/film/%d'
 
 def Start():
-  HTTP.CacheTime = CACHE_1DAY
+  HTTP.CacheTime = CACHE_1WEEK
+  HTTP.Headers['User-Agent'] = 'Plex Media Server/%s' % Platform.ServerVersion
 
 class MovieMeterAgent(Agent.Movies):
   name = 'MovieMeter'
@@ -21,11 +21,11 @@ class MovieMeterAgent(Agent.Movies):
     self.valid_till = 0
 
   def search(self, results, media, lang):
-    # Zoek het MovieMeter film id op aan de hand van het door Freebase gevonden IMDb-id...
+    # Lookup the MovieMeter movie id using the IMDb id found by the Freebase Agent
     try:
       mm_id = self.proxy.film.retrieveByImdb(self.get_session_key(), media.primary_metadata.id) # media.primary_metadata.id = IMDb-id
       results.Append(MetadataSearchResult(id=mm_id, score=100))
-    # ...als dat mislukt, probeer het MovieMeter film id te vinden aan de hand van de titel
+    # If we can't find the MovieMeter movie id using the IMDb id, try to find the MovieMeter movie id by doing a search for movie title
     except:
       search = self.proxy.film.search(self.get_session_key(), media.primary_metadata.title)
       for result in search:
@@ -39,7 +39,7 @@ class MovieMeterAgent(Agent.Movies):
           directors_text = String.StripDiacritics(result['directors_text'])
           for director in media.primary_metadata.directors:
             director = String.StripDiacritics(director)
-            if re.search(director, directors_text, re.IGNORECASE) != None:
+            if re.search(director, directors_text, re.IGNORECASE):
               score = score + 10
               break
 
@@ -49,7 +49,7 @@ class MovieMeterAgent(Agent.Movies):
   def update(self, metadata, media, lang):
     if lang == 'nl':
       response = self.proxy.film.retrieveDetails(self.get_session_key(), int(metadata.id))
-      if response != None:
+      if response:
         metadata.year = int(response['year'])
 
         if Prefs['rating']:
