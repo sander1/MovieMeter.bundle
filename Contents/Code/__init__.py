@@ -1,6 +1,3 @@
-import re
-from time import time
-
 MM_ENDPOINT_URI = 'http://www.moviemeter.nl/ws'
 MM_API_KEY = 'fnsxd7shhmc8gefjhz2zv0nrjwjbezhj'
 MM_MOVIE_PAGE = 'http://www.moviemeter.nl/film/%d'
@@ -40,7 +37,7 @@ class MovieMeterAgent(Agent.Movies):
             directors_text = String.StripDiacritics(result['directors_text'])
             for director in media.primary_metadata.directors:
               director = String.StripDiacritics(director)
-              if re.search(director, directors_text, re.IGNORECASE):
+              if Regex(director, Regex.IGNORECASE).search(directors_text):
                 score = score + 10
                 break
 
@@ -102,7 +99,7 @@ class MovieMeterAgent(Agent.Movies):
           metadata.content_rating = ''
 
   def get_session_key(self):
-    if self.valid_till < int(time()):
+    if self.valid_till < Datetime.TimestampFromDatetime(Datetime.Now()):
       response = self.proxy.api.startSession(MM_API_KEY)
       self.session_key = response['session_key']
       self.valid_till = int(response['valid_till'])
