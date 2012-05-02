@@ -21,30 +21,31 @@ class MovieMeterAgent(Agent.Movies):
     self.valid_till = 0
 
   def search(self, results, media, lang):
-    # Lookup the MovieMeter movie id using the IMDb id found by the Freebase Agent
-    try:
-      mm_id = self.proxy.film.retrieveByImdb(self.get_session_key(), media.primary_metadata.id) # media.primary_metadata.id = IMDb-id
-      results.Append(MetadataSearchResult(id=mm_id, score=100))
-    # If we can't find the MovieMeter movie id using the IMDb id, try to find the MovieMeter movie id by doing a search for movie title
-    except:
-      search = self.proxy.film.search(self.get_session_key(), media.primary_metadata.title)
-      for result in search:
-        mm_id = result['filmId']
-        score = int(result['similarity'].split('.')[0])
+    if lang == 'nl':
+      # Lookup the MovieMeter movie id using the IMDb id found by the Freebase Agent
+      try:
+        mm_id = self.proxy.film.retrieveByImdb(self.get_session_key(), media.primary_metadata.id) # media.primary_metadata.id = IMDb-id
+        results.Append(MetadataSearchResult(id=mm_id, score=100))
+      # If we can't find the MovieMeter movie id using the IMDb id, try to find the MovieMeter movie id by doing a search for movie title
+      except:
+        search = self.proxy.film.search(self.get_session_key(), media.primary_metadata.title)
+        for result in search:
+          mm_id = result['filmId']
+          score = int(result['similarity'].split('.')[0])
 
-        if result.has_key('year'):
-          score = score - abs(media.primary_metadata.year - int(result['year']))
+          if result.has_key('year'):
+            score = score - abs(media.primary_metadata.year - int(result['year']))
 
-        if result.has_key('directors_text'):
-          directors_text = String.StripDiacritics(result['directors_text'])
-          for director in media.primary_metadata.directors:
-            director = String.StripDiacritics(director)
-            if re.search(director, directors_text, re.IGNORECASE):
-              score = score + 10
-              break
+          if result.has_key('directors_text'):
+            directors_text = String.StripDiacritics(result['directors_text'])
+            for director in media.primary_metadata.directors:
+              director = String.StripDiacritics(director)
+              if re.search(director, directors_text, re.IGNORECASE):
+                score = score + 10
+                break
 
-        results.Append(MetadataSearchResult(id=mm_id, score=score))
-        results.Sort('score', descending=True)
+          results.Append(MetadataSearchResult(id=mm_id, score=score))
+          results.Sort('score', descending=True)
 
   def update(self, metadata, media, lang):
     if lang == 'nl':
@@ -85,6 +86,20 @@ class MovieMeterAgent(Agent.Movies):
             metadata.posters[poster] = Proxy.Preview(img)
         else:
           del metadata.posters[poster]
+
+        if Prefs['content_rating']:
+          try:
+            kijkwijzer = movie_page.xpath('//img[contains(@src, "kijkwijzer")]')[0].get('alt')
+            if kijkwijzer.split(' ')[0] in ['6', '9', '12', '16']:
+              metadata.content_rating = 'nl/%s' % kijkwijzer.split(' ')[0]
+            elif kijkwijzer == 'alle leeftijden':
+              metadata.content_rating = 'nl/AL'
+            else:
+              metadata.content_rating = ''
+          except:
+            metadata.content_rating = ''
+        else:
+          metadata.content_rating = ''
 
   def get_session_key(self):
     if self.valid_till < int(time()):
