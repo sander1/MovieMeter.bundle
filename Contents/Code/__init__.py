@@ -10,7 +10,10 @@ class MovieMeterAgent(Agent.Movies):
   name = 'MovieMeter'
   languages = [Locale.Language.Dutch]
   primary_provider = False
-  contributes_to = ['com.plexapp.agents.imdb']
+  contributes_to = [
+    'com.plexapp.agents.imdb',
+    'com.plexapp.agents.themoviedb'
+  ]
 
   def __init__(self):
     Agent.Movies.__init__(self)
@@ -19,9 +22,21 @@ class MovieMeterAgent(Agent.Movies):
 
   def search(self, results, media, lang):
     if lang == 'nl':
-      # Lookup the MovieMeter movie id using the IMDb id found by the Freebase Agent
+      if media.primary_agent == 'com.plexapp.agents.themoviedb':
+        imdb_id = Core.messaging.call_external_function(
+          'com.plexapp.agents.themoviedb',
+          'MessageKit:GetImdbId',
+          kwargs = dict(
+            tmdb_id = media.primary_metadata.id,
+            lang = lang
+          )
+        )
+      else:
+        imdb_id = media.primary_metadata.id
+
+      # Lookup the MovieMeter movie id using the IMDb id
       try:
-        mm_id = self.proxy.film.retrieveByImdb(self.get_session_key(), media.primary_metadata.id) # media.primary_metadata.id = IMDb-id
+        mm_id = self.proxy.film.retrieveByImdb(self.get_session_key(), imdb_id)
         results.Append(MetadataSearchResult(id=mm_id, score=100))
       # If we can't find the MovieMeter movie id using the IMDb id, try to find the MovieMeter movie id by doing a search for movie title
       except:
