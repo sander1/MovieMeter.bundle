@@ -79,13 +79,13 @@ class MovieMeterAgent(Agent.Movies):
         movie_page = HTML.ElementFromURL(MM_MOVIE_PAGE % int(metadata.id))
 
         if Prefs['title']:
-          metadata.title = movie_page.xpath('//div[@id="centrecontent"]/h1')[0].text.rsplit('(',1)[0].strip()
+          metadata.title = movie_page.xpath('//h1[@itemprop="name"]/text()')[0].rsplit('(',1)[0].strip()
         else:
           metadata.title = ''
 
         if Prefs['summary']:
           try:
-            metadata.summary = String.StripTags( movie_page.xpath('//div[@id="film_info"]/span[@itemprop="description"]/text()')[0].strip() )
+            metadata.summary = String.StripTags( movie_page.xpath('//p[@itemprop="description"]/text()')[0].strip() )
           except:
             metadata.summary = ''
         else:
@@ -101,7 +101,7 @@ class MovieMeterAgent(Agent.Movies):
 
         if Prefs['content_rating']:
           try:
-            kijkwijzer = movie_page.xpath('//img[contains(@src, "kijkwijzer")]')[0].get('alt')
+            kijkwijzer = movie_page.xpath('//img[contains(@src, "kijkwijzer")]/@alt')[0]
             if kijkwijzer.split(' ')[0] in ['6', '9', '12', '16']:
               metadata.content_rating = 'nl/%s' % kijkwijzer.split(' ')[0]
             elif kijkwijzer == 'alle leeftijden':
