@@ -79,7 +79,7 @@ class MovieMeterAgent(Agent.Movies):
         movie_page = HTML.ElementFromURL(MM_MOVIE_PAGE % int(metadata.id))
 
         if Prefs['title']:
-          metadata.title = movie_page.xpath('//h1[@itemprop="name"]/text()')[0].rsplit('(',1)[0].strip()
+          metadata.title = movie_page.xpath('//h1/span[@itemprop="name"]/text()')[0].rsplit('(',1)[0].strip()
         else:
           metadata.title = ''
 
