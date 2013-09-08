@@ -91,7 +91,7 @@ class MovieMeterAgent(Agent.Movies):
         else:
           metadata.summary = ''
 
-        poster = response['thumbnail'].replace('/thumbs', '')
+        poster = response['thumbnail'].replace('/thumbs', '').replace('.200.jpg', '.jpg')
         if Prefs['poster']:
           if poster not in metadata.posters:
             img = HTTP.Request(poster)
