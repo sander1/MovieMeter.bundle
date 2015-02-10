@@ -40,29 +40,30 @@ class MovieMeterAgent(Agent.Movies):
       return None
 
     # Lookup the MovieMeter movie id using the IMDb id
-    json_obj = JSON.ObjectFromURL(API_MOVIE_URL % (imdb_id))
-
-    if 'message' not in json_obj:
+    try:
+      json_obj = JSON.ObjectFromURL(API_MOVIE_URL % (imdb_id))
       mm_id = json_obj['id']
       results.Append(MetadataSearchResult(id=str(mm_id), score=100))
 
     # If we can't find the MovieMeter movie id using the IMDb id, try to find the MovieMeter movie id by doing a search for movie title
-    else:
+    except:
       title = String.Quote(media.primary_metadata.title)
-      json_obj = JSON.ObjectFromURL(API_SEARCH_URL % (title))
 
-      if 'message' not in json_obj:
+      try:
+        json_obj = JSON.ObjectFromURL(API_SEARCH_URL % (title))
+      except:
+        return None
 
-        for result in json_obj:
+      for result in json_obj:
 
-          score = 100
-          mm_id = result['id']
+        score = 100
+        mm_id = result['id']
 
-          if 'year' in result:
-            score = score - abs(media.primary_metadata.year - int(result['year']))
+        if 'year' in result:
+          score = score - abs(media.primary_metadata.year - int(result['year']))
 
-          results.Append(MetadataSearchResult(id=str(mm_id), score=score))
-          results.Sort('score', descending=True)
+        results.Append(MetadataSearchResult(id=str(mm_id), score=score))
+        results.Sort('score', descending=True)
 
   def update(self, metadata, media, lang):
 
