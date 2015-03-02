@@ -20,9 +20,6 @@ class MovieMeterAgent(Agent.Movies):
 
   def search(self, results, media, lang):
 
-    if lang != 'nl':
-      return None
-
     if media.primary_agent == 'com.plexapp.agents.imdb':
       imdb_id = media.primary_metadata.id
 
@@ -66,9 +63,6 @@ class MovieMeterAgent(Agent.Movies):
         results.Sort('score', descending=True)
 
   def update(self, metadata, media, lang):
-
-    if lang != 'nl':
-      return None
 
     json_obj = JSON.ObjectFromURL(API_MOVIE_URL % (metadata.id))
 
