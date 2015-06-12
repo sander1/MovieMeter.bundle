@@ -18,6 +18,12 @@
 		"default":"true"
 	},
 	{
+		"id":"append_rating",
+		"label":"Toon rating in synopsis",
+		"type":"bool",
+		"default":"false"
+	},
+	{
 		"id":"genres",
 		"label":"Genres",
 		"type":"bool",
