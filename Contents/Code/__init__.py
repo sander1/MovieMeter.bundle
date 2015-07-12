@@ -85,7 +85,7 @@ class MovieMeterAgent(Agent.Movies):
       else:
         metadata.rating = None
 
-      if Prefs['rating'] and Prefs['summary']:
+      if Prefs['rating'] and Prefs['append_rating'] and Prefs['summary']:
         metadata.summary = '%s  ★  %s' % (round(metadata.rating, 1), metadata.summary)
 
       metadata.genres.clear()
