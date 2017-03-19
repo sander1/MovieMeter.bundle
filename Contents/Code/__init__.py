@@ -1,12 +1,13 @@
 API_KEY = 'fnsxd7shhmc8gefjhz2zv0nrjwjbezhj'
-API_MOVIE_URL = 'http://www.moviemeter.nl/api/film/%%s&api_key=%s' % (API_KEY)
-API_SEARCH_URL = 'http://www.moviemeter.nl/api/film/?q=%%s&api_key=%s' % (API_KEY)
-MOVIE_URL = 'http://www.moviemeter.nl/film/%s'
+API_MOVIE_URL = 'https://www.moviemeter.nl/api/film/%%s?api_key=%s' % (API_KEY)
+API_SEARCH_URL = 'https://www.moviemeter.nl/api/film/?q=%%s&api_key=%s' % (API_KEY)
+MOVIE_URL = 'https://www.moviemeter.nl/film/%s'
 
 def Start():
 
   HTTP.CacheTime = CACHE_1WEEK
   HTTP.Headers['User-Agent'] = 'Plex Media Server/%s' % Platform.ServerVersion
+  HTTP.Headers['Cookie'] = 'cok=1'
 
 class MovieMeterAgent(Agent.Movies):
 
@@ -20,9 +21,11 @@ class MovieMeterAgent(Agent.Movies):
 
   def search(self, results, media, lang):
 
+    # In case 'Plex Movie' is the primary agent
     if media.primary_agent == 'com.plexapp.agents.imdb':
       imdb_id = media.primary_metadata.id
 
+    # In case 'The Movie Database' is the primary agent
     elif media.primary_agent == 'com.plexapp.agents.themoviedb':
       imdb_id = Core.messaging.call_external_function(
         'com.plexapp.agents.themoviedb',
