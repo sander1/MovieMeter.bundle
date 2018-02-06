@@ -112,9 +112,9 @@ class MovieMeterAgent(Agent.Movies):
           kijkwijzer = movie_page.xpath('//div[contains(@class, "rating_")]/@title')[0]
 
           if kijkwijzer.split(' ')[0] in ['6', '9', '12', '16']:
-            metadata.content_rating = 'nl/%s' % kijkwijzer.split(' ')[0]
+            metadata.content_rating = kijkwijzer.split(' ')[0]
           elif kijkwijzer == 'alle leeftijden':
-            metadata.content_rating = 'nl/AL'
+            metadata.content_rating = 'AL'
           else:
             metadata.content_rating = None
 
