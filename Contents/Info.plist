@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.plexapp.agents.moviemeter</string>
+	<string>sander1.plexagents.moviemeter</string>
 	<key>PlexAgentAttributionText</key>
 	<string>Dutch movie titles, summaries and genres by &lt;a href=&quot;http://www.moviemeter.nl/&quot;&gt;MovieMeter&lt;/a&gt;&lt;br/&gt;Free for non-commercial use.</string>
 	<key>PlexFrameworkVersion</key>
