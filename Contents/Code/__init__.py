@@ -109,7 +109,7 @@ class MovieMeterAgent(Agent.Movies):
         movie_page = HTML.ElementFromURL(MOVIE_URL % metadata.id)
 
         try:
-          kijkwijzer = movie_page.xpath('//div[contains(@class, "rating_")]/@title')[0]
+          kijkwijzer = movie_page.xpath('//svg[contains(@class, "icon-")]/@title')[0]
 
           if kijkwijzer.split(' ')[0] in ['6', '9', '12', '16']:
             metadata.content_rating = kijkwijzer.split(' ')[0]
